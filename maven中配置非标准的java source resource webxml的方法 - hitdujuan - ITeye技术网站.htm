@@ -1,0 +1,524 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!-- saved from url=(0039)http://hitdujuan.iteye.com/blog/1746932 -->
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="zh-CN" dir="ltr"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    
+    <title>maven中配置非标准的java source resource webxml的方法 - hitdujuan - ITeye技术网站</title>
+    <meta name="description" content="最近在做一个非标准目录的项目，但想使用maven管理，标准的java source路径为src/main/java resource路径为src/main/resource.而这个项目现在的路径为src/java和src/conf.因此，在maven的pom中加上如下配置即可：   &lt;build&gt;  ......             &lt;sourceDirectory&gt;sr ...">
+    <meta name="keywords" content="maven maven中配置非标准的java source resource webxml的方法">
+    <link rel="shortcut icon" href="http://hitdujuan.iteye.com/images/favicon.ico" type="image/x-icon">
+    <link rel="search" type="application/opensearchdescription+xml" href="http://hitdujuan.iteye.com/open_search.xml" title="ITeye">
+    <link href="http://hitdujuan.iteye.com/rss" rel="alternate" title="hitdujuan" type="application/rss+xml">
+    <link href="./maven中配置非标准的java source resource webxml的方法 - hitdujuan - ITeye技术网站_files/blog.css" media="screen" rel="stylesheet" type="text/css">
+<link href="./maven中配置非标准的java source resource webxml的方法 - hitdujuan - ITeye技术网站_files/blue.css" media="screen" rel="stylesheet" type="text/css">
+    <script type="text/javascript" async="" src="./maven中配置非标准的java source resource webxml的方法 - hitdujuan - ITeye技术网站_files/ga.js"></script><script src="./maven中配置非标准的java source resource webxml的方法 - hitdujuan - ITeye技术网站_files/application.js" type="text/javascript"></script>
+    <script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-535605-1']);
+  _gaq.push(['_setDomainName', 'iteye.com']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+
+      <link href="./maven中配置非标准的java source resource webxml的方法 - hitdujuan - ITeye技术网站_files/SyntaxHighlighter.css" media="screen" rel="stylesheet" type="text/css">
+  <script src="./maven中配置非标准的java source resource webxml的方法 - hitdujuan - ITeye技术网站_files/shCoreCommon.js" type="text/javascript"></script>
+<script src="./maven中配置非标准的java source resource webxml的方法 - hitdujuan - ITeye技术网站_files/hotkey.js" type="text/javascript"></script>
+  <script src="./maven中配置非标准的java source resource webxml的方法 - hitdujuan - ITeye技术网站_files/code_favorites.js" type="text/javascript"></script>
+<script src="./maven中配置非标准的java source resource webxml的方法 - hitdujuan - ITeye技术网站_files/weiboshare.js" type="text/javascript"></script>
+  <link href="./maven中配置非标准的java source resource webxml的方法 - hitdujuan - ITeye技术网站_files/ui.css" media="screen" rel="stylesheet" type="text/css">
+  <script src="./maven中配置非标准的java source resource webxml的方法 - hitdujuan - ITeye技术网站_files/compress.js" type="text/javascript"></script>
+  <style type="text/css">.dp-j .annotation { color: #646464; }.dp-j .number { color: #C00000; }</style><style type="text/css">.dp-j .annotation { color: #646464; }.dp-j .number { color: #C00000; }</style><style type="text/css">.dp-j .annotation { color: #646464; }.dp-j .number { color: #C00000; }</style></head>
+  <body>
+    <div id="header">
+      <div id="blog_site_nav">
+  <a href="http://www.iteye.com/" class="homepage">首页</a>
+  <a href="http://www.iteye.com/news">资讯</a>
+  <a href="http://www.iteye.com/magazines">精华</a>
+  <a href="http://www.iteye.com/forums">论坛</a>
+  <a href="http://www.iteye.com/ask">问答</a>
+  <a href="http://www.iteye.com/blogs">博客</a>
+  <a href="http://www.iteye.com/blogs/subjects">专栏</a>
+  <a href="http://www.iteye.com/groups">群组</a>
+  <a href="http://hitdujuan.iteye.com/blog/1746932#" onclick="return false;" id="msna"><u>更多</u> <small>▼</small></a>
+  <div class="quick_menu" style="display: none;">
+    <a target="_blank" href="http://job.iteye.com/iteye">招聘</a>
+    <a href="http://www.iteye.com/search">搜索</a>
+  </div>
+</div>
+
+      <div id="user_nav">
+  
+        <a href="http://lym6520.iteye.com/" title="查看我的博客首页" class="welcome">欢迎lym6520</a>
+    <a id="notifications_count" href="http://my.iteye.com/notifications" class="" title="没有未读消息">0</a>
+    
+      <a href="http://my.iteye.com/messages" title="发送站内短信">收件箱</a>
+    
+    <a href="http://my.iteye.com/" title="我的应用首页">我的应用</a>
+    <div class="quick_menu" style="left: 747px; display: none;">
+      <a href="http://my.iteye.com/feed" title="我关注的好友动态消息">我的关注</a>
+      <a href="http://my.iteye.com/mygroup" title="我加入的群组最新话题">我的群组</a>
+      <a href="http://my.iteye.com/myresume" title="我的个人简历">我的简历</a>
+      <a href="http://my.iteye.com/admin/album" title="我的个人简历">我的相册</a>
+      <a href="http://my.iteye.com/admin/link" title="我收藏的网络资源链接">我的收藏</a>
+      <a href="http://my.iteye.com/admin/code" title="我收藏的代码">我的代码</a>
+      <a href="http://my.iteye.com/admin/weibo" title="用微博发表简短的话题">我的微博</a>
+    </div>
+    <a href="http://lym6520.iteye.com/admin" title="管理我的博客">我的博客</a>
+    <a href="http://my.iteye.com/profile" title="修改我的个人设置">设置</a>
+    <a href="http://hitdujuan.iteye.com/logout" class="nobg" onclick="var f = document.createElement(&#39;form&#39;); f.style.display = &#39;none&#39;; this.parentNode.appendChild(f); f.method = &#39;POST&#39;; f.action = this.href;var m = document.createElement(&#39;input&#39;); m.setAttribute(&#39;type&#39;, &#39;hidden&#39;); m.setAttribute(&#39;name&#39;, &#39;_method&#39;); m.setAttribute(&#39;value&#39;, &#39;put&#39;); f.appendChild(m);var s = document.createElement(&#39;input&#39;); s.setAttribute(&#39;type&#39;, &#39;hidden&#39;); s.setAttribute(&#39;name&#39;, &#39;authenticity_token&#39;); s.setAttribute(&#39;value&#39;, &#39;+qCQ9tfQ0KvhFhEX/YaxGGWnVxD9dK8v5tyYtjPDqPY=&#39;); f.appendChild(s);f.submit();return false;">退出</a>
+  </div>
+
+    </div>
+
+    <div id="page">
+      <div id="branding" class="clearfix">
+        <div id="blog_name">
+          <h1><a href="http://hitdujuan.iteye.com/">hitdujuan</a></h1>
+        </div>
+        <div id="fd"></div>
+        <div id="blog_navbar">
+          <ul>
+            <li class="blog_navbar_for"><a href="http://hitdujuan.iteye.com/"><strong>博客</strong></a></li>
+            <li><a href="http://hitdujuan.iteye.com/weibo">微博</a></li>
+            <li><a href="http://hitdujuan.iteye.com/album">相册</a></li>
+            <li><a href="http://hitdujuan.iteye.com/link">收藏</a></li>
+            <li><a href="http://hitdujuan.iteye.com/blog/guest_book">留言</a></li>
+            <li><a href="http://hitdujuan.iteye.com/blog/profile">关于我</a></li>
+          </ul>
+    
+          <div class="search">
+            <form action="http://hitdujuan.iteye.com/blog/search" method="get">
+              <input class="search_text" id="query" name="query" style="margin-left: 10px;width: 110px;" type="text" value="">
+              <input class="submit_search" type="submit" value="">
+            </form>
+          </div> 
+          <div id="fd"></div>         
+        </div>
+      </div>
+      
+      <div id="content" class="clearfix">
+        <div id="main">
+          
+
+
+
+          
+
+
+<div class="h-entry" style="display:none">
+  <a href="http://hitdujuan.iteye.com/" class="p-author" target="_blank">hitdujuan</a>
+</div>
+
+
+<div class="blog_main">
+  <div class="blog_title">
+    <h3>
+      <a href="./maven中配置非标准的java source resource webxml的方法 - hitdujuan - ITeye技术网站_files/maven中配置非标准的java source resource webxml的方法 - hitdujuan - ITeye技术网站.htm">maven中配置非标准的java source resource webxml的方法</a>
+      <em class="actions">      </em>
+    </h3>
+    <ul class="blog_categories"><strong>博客分类：</strong> <li><a href="http://hitdujuan.iteye.com/category/259978">maven</a></li> </ul>
+        <div class="news_tag"><a href="http://www.iteye.com/blogs/tag/maven">maven</a>&nbsp;</div>
+  </div>
+
+  <div id="blog_content" class="blog_content">
+    最近在做一个非标准目录的项目，但想使用maven管理，标准的java source路径为src/main/java
+<br>resource路径为src/main/resource.而这个项目现在的路径为src/java和src/conf.因此，在maven的pom中加上如下配置即可：
+<br><div class="dp-highlighter" id=""><div class="bar"><div class="tools">Java代码 <embed wmode="transparent" src="/javascripts/syntaxhighlighter/clipboard_new.swf" width="14" height="15" flashvars="clipboard=%3Cbuild%3E%0A......%0A%20%20%20%20%20%20%20%20%20%20%20%3CsourceDirectory%3Esrc%2Fjava%3C%2FsourceDirectory%3E%0A%09%20%20%3CtestSourceDirectory%3Esrc%2Fjava.test%3C%2FtestSourceDirectory%3E%0A%09%20%20%20%09%3Cresources%3E%0A%09%09%09%3Cresource%3E%0A%09%09%09%09%3Cdirectory%3Esrc%2Fconf%3C%2Fdirectory%3E%0A%09%09%09%09%3Cincludes%3E%0A%09%09%09%09%09%3Cinclude%3E**%2F*%3C%2Finclude%3E%0A%09%09%09%09%3C%2Fincludes%3E%0A%09%09%09%3C%2Fresource%3E%0A%09%09%0A%09%09%09%3Cresource%3E%0A%09%09%09%09%3Cdirectory%3Esrc%2Fjava%3C%2Fdirectory%3E%0A%09%09%09%09%3Cincludes%3E%0A%09%09%09%09%09%3Cinclude%3E**%2F*%3C%2Finclude%3E%0A%09%09%09%09%3C%2Fincludes%3E%0A%09%09%09%09%3Cexcludes%3E%0A%09%09%09%09%09%3Cexclude%3E**%2F*.java%3C%2Fexclude%3E%0A%09%09%09%09%3C%2Fexcludes%3E%0A%09%09%09%3C%2Fresource%3E%0A%09%09%3C%2Fresources%3E%0A%09%09%3CtestResources%3E%0A%09%09%09%3CtestResource%3E%0A%09%09%09%09%3Cdirectory%3Esrc%2Fconf.test%3C%2Fdirectory%3E%0A%09%09%09%09%3Cincludes%3E%0A%09%09%09%09%09%3Cinclude%3E**%2F*%3C%2Finclude%3E%0A%09%09%09%09%3C%2Fincludes%3E%0A%09%09%09%3C%2FtestResource%3E%0A%09%09%09%3CtestResource%3E%0A%09%09%09%09%09%3Cdirectory%3Esrc%2Fjava.test%3C%2Fdirectory%3E%0A%09%09%09%09%09%3Cincludes%3E%0A%09%09%09%09%09%09%3Cinclude%3E**%2F*%3C%2Finclude%3E%0A%09%09%09%09%09%3C%2Fincludes%3E%0A%09%09%09%09%09%3Cexcludes%3E%0A%09%09%09%09%09%09%3Cexclude%3E**%2F*.java%3C%2Fexclude%3E%0A%09%09%09%09%09%3C%2Fexcludes%3E%0A%09%09%09%3C%2FtestResource%3E%0A%09%09%3C%2FtestResources%3E%09%0A......%0A%0A%3C%2Fbuild%3E" quality="high" allowscriptaccess="always" type="application/x-shockwave-flash" pluginspage="http://www.macromedia.com/go/getflashplayer">&nbsp;<a href="javascript:void()" title="收藏这段代码" onclick="code_favorites_do_favorite(this);return false;"><img class="star" src="./maven中配置非标准的java source resource webxml的方法 - hitdujuan - ITeye技术网站_files/icon_star.png" alt="收藏代码"><img class="spinner" src="./maven中配置非标准的java source resource webxml的方法 - hitdujuan - ITeye技术网站_files/spinner.gif" style="display:none"></a></div></div><ol start="1" class="dp-j"><li><span><span>&lt;build&gt;&nbsp;&nbsp;</span></span></li><li><span>......&nbsp;&nbsp;</span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;sourceDirectory&gt;src/java&lt;/sourceDirectory&gt;&nbsp;&nbsp;</span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;testSourceDirectory&gt;src/java.test&lt;/testSourceDirectory&gt;&nbsp;&nbsp;</span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;resources&gt;&nbsp;&nbsp;</span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;resource&gt;&nbsp;&nbsp;</span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;directory&gt;src/conf&lt;/directory&gt;&nbsp;&nbsp;</span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;includes&gt;&nbsp;&nbsp;</span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;include&gt;**<span class="comment">/*&lt;/include&gt;</span>&nbsp;</span></li><li><span><span class="comment">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;/includes&gt;</span>&nbsp;</span></li><li><span><span class="comment">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;/resource&gt;</span>&nbsp;</span></li><li><span><span class="comment">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>&nbsp;</span></li><li><span><span class="comment">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;resource&gt;</span>&nbsp;</span></li><li><span><span class="comment">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;directory&gt;src/java&lt;/directory&gt;</span>&nbsp;</span></li><li><span><span class="comment">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;includes&gt;</span>&nbsp;</span></li><li><span><span class="comment">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;include&gt;**/</span><span>*&lt;/include&gt;&nbsp;&nbsp;</span></span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;/includes&gt;&nbsp;&nbsp;</span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;excludes&gt;&nbsp;&nbsp;</span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;exclude&gt;**<span class="comment">/*.java&lt;/exclude&gt;</span>&nbsp;</span></li><li><span><span class="comment">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;/excludes&gt;</span>&nbsp;</span></li><li><span><span class="comment">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;/resource&gt;</span>&nbsp;</span></li><li><span><span class="comment">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;/resources&gt;</span>&nbsp;</span></li><li><span><span class="comment">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;testResources&gt;</span>&nbsp;</span></li><li><span><span class="comment">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;testResource&gt;</span>&nbsp;</span></li><li><span><span class="comment">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;directory&gt;src/conf.test&lt;/directory&gt;</span>&nbsp;</span></li><li><span><span class="comment">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;includes&gt;</span>&nbsp;</span></li><li><span><span class="comment">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;include&gt;**/</span><span>*&lt;/include&gt;&nbsp;&nbsp;</span></span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;/includes&gt;&nbsp;&nbsp;</span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;/testResource&gt;&nbsp;&nbsp;</span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;testResource&gt;&nbsp;&nbsp;</span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;directory&gt;src/java.test&lt;/directory&gt;&nbsp;&nbsp;</span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;includes&gt;&nbsp;&nbsp;</span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;include&gt;**<span class="comment">/*&lt;/include&gt;</span>&nbsp;</span></li><li><span><span class="comment">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;/includes&gt;</span>&nbsp;</span></li><li><span><span class="comment">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;excludes&gt;</span>&nbsp;</span></li><li><span><span class="comment">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;exclude&gt;**/</span><span>*.java&lt;/exclude&gt;&nbsp;&nbsp;</span></span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;/excludes&gt;&nbsp;&nbsp;</span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;/testResource&gt;&nbsp;&nbsp;</span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;/testResources&gt;&nbsp;&nbsp;&nbsp;&nbsp;</span></li><li><span>......&nbsp;&nbsp;</span></li><li><span>&nbsp;&nbsp;</span></li><li><span>&lt;/build&gt;&nbsp;&nbsp;</span></li></ol></div><pre name="code" class="java" codeable_id="1746932" codeable_type="Blog" source_url="http://hitdujuan.iteye.com/blog/1746932" pre_index="0" title="maven中配置非标准的java source resource webxml的方法" style="display: none;">&lt;build&gt;
+......
+           &lt;sourceDirectory&gt;src/java&lt;/sourceDirectory&gt;
+	  &lt;testSourceDirectory&gt;src/java.test&lt;/testSourceDirectory&gt;
+	   	&lt;resources&gt;
+			&lt;resource&gt;
+				&lt;directory&gt;src/conf&lt;/directory&gt;
+				&lt;includes&gt;
+					&lt;include&gt;**/*&lt;/include&gt;
+				&lt;/includes&gt;
+			&lt;/resource&gt;
+		
+			&lt;resource&gt;
+				&lt;directory&gt;src/java&lt;/directory&gt;
+				&lt;includes&gt;
+					&lt;include&gt;**/*&lt;/include&gt;
+				&lt;/includes&gt;
+				&lt;excludes&gt;
+					&lt;exclude&gt;**/*.java&lt;/exclude&gt;
+				&lt;/excludes&gt;
+			&lt;/resource&gt;
+		&lt;/resources&gt;
+		&lt;testResources&gt;
+			&lt;testResource&gt;
+				&lt;directory&gt;src/conf.test&lt;/directory&gt;
+				&lt;includes&gt;
+					&lt;include&gt;**/*&lt;/include&gt;
+				&lt;/includes&gt;
+			&lt;/testResource&gt;
+			&lt;testResource&gt;
+					&lt;directory&gt;src/java.test&lt;/directory&gt;
+					&lt;includes&gt;
+						&lt;include&gt;**/*&lt;/include&gt;
+					&lt;/includes&gt;
+					&lt;excludes&gt;
+						&lt;exclude&gt;**/*.java&lt;/exclude&gt;
+					&lt;/excludes&gt;
+			&lt;/testResource&gt;
+		&lt;/testResources&gt;	
+......
+
+&lt;/build&gt;</pre>
+<br>这样maven打包时，就会编绎在src/java文件夹下的java文件，并将src/conf下的配置文件放到target的classes下；
+<br>
+<br>如果还有其它在打包时，自动生成的java代码，或是多个java文件目录，那可以考虑使用专门做这个工作的plugin,配置如下：
+<br><div class="dp-highlighter" id=""><div class="bar"><div class="tools">Java代码 <embed wmode="transparent" src="/javascripts/syntaxhighlighter/clipboard_new.swf" width="14" height="15" flashvars="clipboard=%3Cplugins%3E%0A%09......%09%09%09%0A%20%20%20%20%20%20%20%20%20%20%20%3Cplugin%3E%0A%09%09%3CgroupId%3Eorg.codehaus.mojo%3C%2FgroupId%3E%0A%09%09%3CartifactId%3Ebuild-helper-maven-plugin%3C%2FartifactId%3E%0A%09%09%20%3Cversion%3E1.4%3C%2Fversion%3E%0A%09%09%20%3Cexecutions%3E%0A%09%09%09%3Cexecution%3E%0A%09%09%09%3Cid%3Eadd-source%3C%2Fid%3E%0A%09%09%09%3Cphase%3Egenerate-sources%3C%2Fphase%3E%0A%09%09%09%3Cgoals%3E%0A%09%09%09%20%20%20%3Cgoal%3Eadd-source%3C%2Fgoal%3E%0A%09%09%09%3C%2Fgoals%3E%0A%09%09%09%3Cconfiguration%3E%0A%09%09%09%09%3Csources%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%3Csource%3E%24%7Bbasedir%7D%2Fsrc%2Fjava%3C%2Fsource%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%3Csource%3E%E8%87%AA%E5%AE%9A%E4%B9%89%E7%9A%84folder%3C%2Fsource%3E%0A%09%09%09%09%3C%2Fsources%3E%0A%09%09%09%20%3C%2Fconfiguration%3E%0A%09%09%20%20%3C%2Fexecution%3E%0A%09%09%20%20%20%3Cexecution%3E%0A%09%09%09%3Cid%3Eadd-test-source%3C%2Fid%3E%0A%09%09%09%3Cphase%3Egenerate-sources%3C%2Fphase%3E%0A%09%09%09%3Cgoals%3E%0A%09%09%09%20%20%20%20%3Cgoal%3Eadd-test-source%3C%2Fgoal%3E%0A%09%09%09%20%3C%2Fgoals%3E%0A%09%09%09%3Cconfiguration%3E%0A%09%09%09%20%20%20%20%3Csources%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%3Csource%3E%24%7Bbasedir%7D%2Fsrc%2Fjava.test%3C%2Fsource%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%3Csource%3E%E8%87%AA%E5%AE%9A%E4%B9%89%E7%9A%84folder%3C%2Fsource%3E%0A%09%09%09%20%20%20%20%3C%2Fsources%3E%0A%09%09%09%20%3C%2Fconfiguration%3E%0A%09%09%09%3C%2Fexecution%3E%0A%09%09%20%20%20%3C%2Fexecutions%3E%0A%09%3C%2Fplugin%3E%0A......%0A%3C%2Fplugins%3E%0A" quality="high" allowscriptaccess="always" type="application/x-shockwave-flash" pluginspage="http://www.macromedia.com/go/getflashplayer">&nbsp;<a href="javascript:void()" title="收藏这段代码" onclick="code_favorites_do_favorite(this);return false;"><img class="star" src="./maven中配置非标准的java source resource webxml的方法 - hitdujuan - ITeye技术网站_files/icon_star.png" alt="收藏代码"><img class="spinner" src="./maven中配置非标准的java source resource webxml的方法 - hitdujuan - ITeye技术网站_files/spinner.gif" style="display:none"></a></div></div><ol start="1" class="dp-j"><li><span><span>&lt;plugins&gt;&nbsp;&nbsp;</span></span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;......&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;plugin&gt;&nbsp;&nbsp;</span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;groupId&gt;org.codehaus.mojo&lt;/groupId&gt;&nbsp;&nbsp;</span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;artifactId&gt;build-helper-maven-plugin&lt;/artifactId&gt;&nbsp;&nbsp;</span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;version&gt;<span class="number">1.4</span><span>&lt;/version&gt;&nbsp;&nbsp;</span></span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;executions&gt;&nbsp;&nbsp;</span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;execution&gt;&nbsp;&nbsp;</span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;id&gt;add-source&lt;/id&gt;&nbsp;&nbsp;</span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;phase&gt;generate-sources&lt;/phase&gt;&nbsp;&nbsp;</span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;goals&gt;&nbsp;&nbsp;</span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;goal&gt;add-source&lt;/goal&gt;&nbsp;&nbsp;</span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;/goals&gt;&nbsp;&nbsp;</span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;configuration&gt;&nbsp;&nbsp;</span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;sources&gt;&nbsp;&nbsp;</span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;source&gt;${basedir}/src/java&lt;/source&gt;&nbsp;&nbsp;</span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;source&gt;自定义的folder&lt;/source&gt;&nbsp;&nbsp;</span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;/sources&gt;&nbsp;&nbsp;</span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;/configuration&gt;&nbsp;&nbsp;</span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;/execution&gt;&nbsp;&nbsp;</span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;execution&gt;&nbsp;&nbsp;</span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;id&gt;add-test-source&lt;/id&gt;&nbsp;&nbsp;</span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;phase&gt;generate-sources&lt;/phase&gt;&nbsp;&nbsp;</span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;goals&gt;&nbsp;&nbsp;</span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;goal&gt;add-test-source&lt;/goal&gt;&nbsp;&nbsp;</span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;/goals&gt;&nbsp;&nbsp;</span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;configuration&gt;&nbsp;&nbsp;</span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;sources&gt;&nbsp;&nbsp;</span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;source&gt;${basedir}/src/java.test&lt;/source&gt;&nbsp;&nbsp;</span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;source&gt;自定义的folder&lt;/source&gt;&nbsp;&nbsp;</span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;/sources&gt;&nbsp;&nbsp;</span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;/configuration&gt;&nbsp;&nbsp;</span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;/execution&gt;&nbsp;&nbsp;</span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;/executions&gt;&nbsp;&nbsp;</span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&lt;/plugin&gt;&nbsp;&nbsp;</span></li><li><span>......&nbsp;&nbsp;</span></li><li><span>&lt;/plugins&gt;&nbsp;&nbsp;</span></li></ol></div><pre name="code" class="java" codeable_id="1746932" codeable_type="Blog" source_url="http://hitdujuan.iteye.com/blog/1746932" pre_index="1" title="maven中配置非标准的java source resource webxml的方法" style="display: none;">&lt;plugins&gt;
+	......			
+           &lt;plugin&gt;
+		&lt;groupId&gt;org.codehaus.mojo&lt;/groupId&gt;
+		&lt;artifactId&gt;build-helper-maven-plugin&lt;/artifactId&gt;
+		 &lt;version&gt;1.4&lt;/version&gt;
+		 &lt;executions&gt;
+			&lt;execution&gt;
+			&lt;id&gt;add-source&lt;/id&gt;
+			&lt;phase&gt;generate-sources&lt;/phase&gt;
+			&lt;goals&gt;
+			   &lt;goal&gt;add-source&lt;/goal&gt;
+			&lt;/goals&gt;
+			&lt;configuration&gt;
+				&lt;sources&gt;
+                                   &lt;source&gt;${basedir}/src/java&lt;/source&gt;
+                                   &lt;source&gt;自定义的folder&lt;/source&gt;
+				&lt;/sources&gt;
+			 &lt;/configuration&gt;
+		  &lt;/execution&gt;
+		   &lt;execution&gt;
+			&lt;id&gt;add-test-source&lt;/id&gt;
+			&lt;phase&gt;generate-sources&lt;/phase&gt;
+			&lt;goals&gt;
+			    &lt;goal&gt;add-test-source&lt;/goal&gt;
+			 &lt;/goals&gt;
+			&lt;configuration&gt;
+			    &lt;sources&gt;
+                                &lt;source&gt;${basedir}/src/java.test&lt;/source&gt;
+                                 &lt;source&gt;自定义的folder&lt;/source&gt;
+			    &lt;/sources&gt;
+			 &lt;/configuration&gt;
+			&lt;/execution&gt;
+		   &lt;/executions&gt;
+	&lt;/plugin&gt;
+......
+&lt;/plugins&gt;
+</pre>
+<br>
+<br>另外，如果web project中的webapp资源也不在标准的maven-war-plugin默认路径：${basedir}/src/main/webapp下，那么需要加入如下配置
+<br><div class="dp-highlighter" id=""><div class="bar"><div class="tools">Java代码 <embed wmode="transparent" src="/javascripts/syntaxhighlighter/clipboard_new.swf" width="14" height="15" flashvars="clipboard=%3Cplugins%3E%0A......%0A%09%3Cplugin%3E%0A%09%09%3CgroupId%3Eorg.apache.maven.plugins%3C%2FgroupId%3E%0A%09%09%3CartifactId%3Emaven-war-plugin%3C%2FartifactId%3E%0A%09%09%3Cversion%3E2.1-beta-1%3C%2Fversion%3E%0A%09%09%3Cconfiguration%3E%0A%20%20%20%20%20%20%20%20%20%20%3C!--%20%E8%BF%99%E9%87%8C%E6%98%AF%E4%BD%A0%E7%9A%84webapp%E7%9B%AE%E5%BD%95%20--%3E%09%20%20%20%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%3CwarSourceDirectory%3E%24%7Bbasedir%7D%2Fsrc%2Fwebroot%3C%2FwarSourceDirectory%3E%0A%09%09%3Carchive%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%3CaddMavenDescriptor%3Efalse%3C%2FaddMavenDescriptor%3E%0A%09%09%20%20%20%3CmanifestEntries%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%3Ctimestamp%3E%24%7Btimestamp%7D%3C%2Ftimestamp%3E%0A%09%09%20%20%20%3C%2FmanifestEntries%3E%0A%09%09%3C%2Farchive%3E%0A%09%09%3C%2Fconfiguration%3E%0A%09%3C%2Fplugin%3E%0A......%0A%3C%2Fplugins%3E%0A" quality="high" allowscriptaccess="always" type="application/x-shockwave-flash" pluginspage="http://www.macromedia.com/go/getflashplayer">&nbsp;<a href="javascript:void()" title="收藏这段代码" onclick="code_favorites_do_favorite(this);return false;"><img class="star" src="./maven中配置非标准的java source resource webxml的方法 - hitdujuan - ITeye技术网站_files/icon_star.png" alt="收藏代码"><img class="spinner" src="./maven中配置非标准的java source resource webxml的方法 - hitdujuan - ITeye技术网站_files/spinner.gif" style="display:none"></a></div></div><ol start="1" class="dp-j"><li><span><span>&lt;plugins&gt;&nbsp;&nbsp;</span></span></li><li><span>......&nbsp;&nbsp;</span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&lt;plugin&gt;&nbsp;&nbsp;</span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;groupId&gt;org.apache.maven.plugins&lt;/groupId&gt;&nbsp;&nbsp;</span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;artifactId&gt;maven-war-plugin&lt;/artifactId&gt;&nbsp;&nbsp;</span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;version&gt;<span class="number">2.1</span><span>-beta-</span><span class="number">1</span><span>&lt;/version&gt;&nbsp;&nbsp;</span></span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;configuration&gt;&nbsp;&nbsp;</span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;!--&nbsp;这里是你的webapp目录&nbsp;--&gt;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;warSourceDirectory&gt;${basedir}/src/webroot&lt;/warSourceDirectory&gt;&nbsp;&nbsp;</span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;archive&gt;&nbsp;&nbsp;</span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;addMavenDescriptor&gt;<span class="keyword">false</span><span>&lt;/addMavenDescriptor&gt;&nbsp;&nbsp;</span></span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;manifestEntries&gt;&nbsp;&nbsp;</span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;timestamp&gt;${timestamp}&lt;/timestamp&gt;&nbsp;&nbsp;</span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;/manifestEntries&gt;&nbsp;&nbsp;</span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;/archive&gt;&nbsp;&nbsp;</span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;/configuration&gt;&nbsp;&nbsp;</span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&lt;/plugin&gt;&nbsp;&nbsp;</span></li><li><span>......&nbsp;&nbsp;</span></li><li><span>&lt;/plugins&gt;&nbsp;&nbsp;</span></li></ol></div><pre name="code" class="java" codeable_id="1746932" codeable_type="Blog" source_url="http://hitdujuan.iteye.com/blog/1746932" pre_index="2" title="maven中配置非标准的java source resource webxml的方法" style="display: none;">&lt;plugins&gt;
+......
+	&lt;plugin&gt;
+		&lt;groupId&gt;org.apache.maven.plugins&lt;/groupId&gt;
+		&lt;artifactId&gt;maven-war-plugin&lt;/artifactId&gt;
+		&lt;version&gt;2.1-beta-1&lt;/version&gt;
+		&lt;configuration&gt;
+          &lt;!-- 这里是你的webapp目录 --&gt;	   
+                    &lt;warSourceDirectory&gt;${basedir}/src/webroot&lt;/warSourceDirectory&gt;
+		&lt;archive&gt;
+                   &lt;addMavenDescriptor&gt;false&lt;/addMavenDescriptor&gt;
+		   &lt;manifestEntries&gt;
+                        &lt;timestamp&gt;${timestamp}&lt;/timestamp&gt;
+		   &lt;/manifestEntries&gt;
+		&lt;/archive&gt;
+		&lt;/configuration&gt;
+	&lt;/plugin&gt;
+......
+&lt;/plugins&gt;
+</pre>
+  </div>
+
+  
+
+
+  <iframe src="./maven中配置非标准的java source resource webxml的方法 - hitdujuan - ITeye技术网站_files/794.htm" scrolling="no" width="468" height="60" frameborder="0"></iframe>
+  
+  <div id="bottoms" class="clearfix">
+    
+    <div id="share_weibo">分享到：
+      <a data-type="sina" href="javascript:;" title="分享到新浪微博"><img src="./maven中配置非标准的java source resource webxml的方法 - hitdujuan - ITeye技术网站_files/sina.jpg"></a>
+      <a data-type="qq" href="javascript:;" title="分享到腾讯微博"><img src="./maven中配置非标准的java source resource webxml的方法 - hitdujuan - ITeye技术网站_files/tec.jpg"></a>
+    </div>
+  </div>
+
+  <div class="blog_nav">
+    <div class="pre_next">
+      <a href="http://hitdujuan.iteye.com/blog/1750624" class="next" title="maven  provided scope 及jsp的编绎问题记录">maven  provided scope 及jsp的编绎问题记 ...</a>
+      |
+      <a href="http://hitdujuan.iteye.com/blog/781247" class="pre" title="每天进步一点">每天进步一点</a>
+    </div>
+  </div>
+  <div class="blog_bottom">
+    <ul>
+      <li>2012-12-13 11:08</li>
+      <li>浏览 724</li>
+      <li><a href="http://hitdujuan.iteye.com/blog/1746932#comments">评论(0)</a></li>
+      
+      
+        <li><a href="http://hitdujuan.iteye.com/admin/link?user_favorite%5Btitle%5D=maven%E4%B8%AD%E9%85%8D%E7%BD%AE%E9%9D%9E%E6%A0%87%E5%87%86%E7%9A%84java+source+resource+webxml%E7%9A%84%E6%96%B9%E6%B3%95&user_favorite%5Burl%5D=http%3A%2F%2Fhitdujuan.iteye.com%2Fblog%2F1746932" target="_blank" class="favorite" onclick="$$(&#39;.favorite_form_spinner&#39;)[0].show();new Ajax.Request(&#39;/admin/link/new_xhr?user_favorite%5Btitle%5D=maven%E4%B8%AD%E9%85%8D%E7%BD%AE%E9%9D%9E%E6%A0%87%E5%87%86%E7%9A%84java+source+resource+webxml%E7%9A%84%E6%96%B9%E6%B3%95&amp;user_favorite%5Burl%5D=http%3A%2F%2Fhitdujuan.iteye.com%2Fblog%2F1746932&#39;, {method: &#39;get&#39;, onSuccess: function(response){$(document.getElementsByTagName(&#39;body&#39;)[0]).insert({bottom:response.responseText});$$(&#39;.favorite_form_spinner&#39;)[0].hide();}});return false;">收藏</a><img alt="Spinner" class="favorite_form_spinner" src="./maven中配置非标准的java source resource webxml的方法 - hitdujuan - ITeye技术网站_files/spinner(1).gif" style="vertical-align:bottom;margin-left:7px;display:none;"></li>
+      
+      <li>分类:<a href="http://www.iteye.com/blogs/category/opensource">开源软件</a></li>      
+      <li class="last"><a href="http://www.iteye.com/wiki/blog/1746932" target="_blank" class="more">相关推荐</a></li>
+    </ul>
+  </div>
+
+  <div class="blog_comment">
+    <h5>评论</h5>
+    <a id="comments" name="comments"></a>
+    
+    
+    
+  </div>
+
+  <div class="blog_comment">
+    <h5>发表评论</h5>
+            <form action="./maven中配置非标准的java source resource webxml的方法 - hitdujuan - ITeye技术网站_files/maven中配置非标准的java source resource webxml的方法 - hitdujuan - ITeye技术网站.htm" id="comment_form" method="post" onsubmit="return false;"><div style="margin:0;padding:0;display:inline"><input name="authenticity_token" type="hidden" value="+qCQ9tfQ0KvhFhEX/YaxGGWnVxD9dK8v5tyYtjPDqPY="></div>          
+
+
+  <input type="hidden" id="editor_bbcode_flag" value="true">
+
+
+
+<div id="editor_main"><div id="editor_wrapper" class="clearfix"><div id="bbcode_emotions"><h5>表情图标</h5><img src="./maven中配置非标准的java source resource webxml的方法 - hitdujuan - ITeye技术网站_files/icon_biggrin.gif"><img src="./maven中配置非标准的java source resource webxml的方法 - hitdujuan - ITeye技术网站_files/icon_smile.gif"><img src="./maven中配置非标准的java source resource webxml的方法 - hitdujuan - ITeye技术网站_files/icon_sad.gif"><img src="./maven中配置非标准的java source resource webxml的方法 - hitdujuan - ITeye技术网站_files/icon_surprised.gif"><img src="./maven中配置非标准的java source resource webxml的方法 - hitdujuan - ITeye技术网站_files/icon_eek.gif"><img src="./maven中配置非标准的java source resource webxml的方法 - hitdujuan - ITeye技术网站_files/icon_confused.gif"><img src="./maven中配置非标准的java source resource webxml的方法 - hitdujuan - ITeye技术网站_files/icon_cool.gif"><img src="./maven中配置非标准的java source resource webxml的方法 - hitdujuan - ITeye技术网站_files/icon_lol.gif"><img src="./maven中配置非标准的java source resource webxml的方法 - hitdujuan - ITeye技术网站_files/icon_mad.gif"><img src="./maven中配置非标准的java source resource webxml的方法 - hitdujuan - ITeye技术网站_files/icon_razz.gif"><img src="./maven中配置非标准的java source resource webxml的方法 - hitdujuan - ITeye技术网站_files/icon_redface.gif"><img src="./maven中配置非标准的java source resource webxml的方法 - hitdujuan - ITeye技术网站_files/icon_cry.gif"><img src="./maven中配置非标准的java source resource webxml的方法 - hitdujuan - ITeye技术网站_files/icon_evil.gif"><img src="./maven中配置非标准的java source resource webxml的方法 - hitdujuan - ITeye技术网站_files/icon_twisted.gif"><img src="./maven中配置非标准的java source resource webxml的方法 - hitdujuan - ITeye技术网站_files/icon_rolleyes.gif"><img src="./maven中配置非标准的java source resource webxml的方法 - hitdujuan - ITeye技术网站_files/icon_wink.gif"><img src="./maven中配置非标准的java source resource webxml的方法 - hitdujuan - ITeye技术网站_files/icon_exclaim.gif"><img src="./maven中配置非标准的java source resource webxml的方法 - hitdujuan - ITeye技术网站_files/icon_question.gif"><img src="./maven中配置非标准的java source resource webxml的方法 - hitdujuan - ITeye技术网站_files/icon_idea.gif"><img src="./maven中配置非标准的java source resource webxml的方法 - hitdujuan - ITeye技术网站_files/icon_arrow.gif"></div><div id="bbcode_controllers"><div id="bbcode_toolbar"><input type="button" value="B" id="button_bold"><input type="button" value="I" id="button_italic"><input type="button" value="U" id="button_underline"><input type="button" value="Quote"><input type="button" value="Code"><input type="button" value="List"><input type="button" value="Img"><input type="button" value="URL"><input type="button" value="Flash"><input type="button" value="Table"><br>字体颜色: <select id="select_color"><option value="black" style="color: black;">标准</option><option value="darkred" style="color: darkred;">深红</option><option value="red" style="color: red;">红色</option><option value="orange" style="color: orange;">橙色</option><option value="brown" style="color: brown;">棕色</option><option value="yellow" style="color: yellow;">黄色</option><option value="green" style="color: green;">绿色</option><option value="olive" style="color: olive;">橄榄</option><option value="cyan" style="color: cyan;">青色</option><option value="blue" style="color: blue;">蓝色</option><option value="darkblue" style="color: darkblue;">深蓝</option><option value="indigo" style="color: indigo;">靛蓝</option><option value="violet" style="color: violet;">紫色</option><option value="gray" style="color: gray;">灰色</option><option value="white" style="color: white;">白色</option><option value="black" style="color: black;">黑色</option></select>&nbsp;字体大小: <select id="select_font"><option value="0">标准</option><option value="xx-small">1 (xx-small)</option><option value="x-small">2 (x-small)</option><option value="small">3 (small)</option><option value="medium">4 (medium)</option><option value="large">5 (large)</option><option value="x-large">6 (x-large)</option><option value="xx-large">7 (xx-large)</option></select>&nbsp;对齐: <select id="select_align"><option value="0">标准</option><option value="left">居左</option><option value="center">居中</option><option value="right">居右</option></select></div><div id="bbcode_tooltip">提示：选择您需要装饰的文字, 按上列按钮即可添加上相应的标签</div><textarea class="validate-richeditor bad-words min-length-5" cols="40" id="editor_body" name="comment[body]" rows="20" style="width: 500px; height: 350px;"></textarea></div></div></div>
+
+
+<script type="text/javascript">
+  var editor = new Control.TextArea.Editor("editor_body", "bbcode", false);
+</script>
+
+          <p style="text-align:right;margin-right:30px;">(快捷键 Alt+S / Ctrl+Enter) <input class="submit" id="quick_reply_button" name="commit" type="submit" value="提交"></p>
+       </form>
+        <script type="text/javascript">
+          new HotKey("s",function() {$('quick_reply_button').click();},{altKey: true, ctrlKey: false});
+          new HotKey(new Number(13),function() {$('quick_reply_button').click();},{altKey: false, ctrlKey: true});
+
+          new Validation("comment_form", {immediate: false, onFormValidate: function(result, form){
+            if(result) {
+              new Ajax.Request('/blog/create_comment/1746932', {
+                onFailure:function(response){
+                  $('comments').insert({after:response.responseText})
+                  form.spinner.hide();
+                  Element.scrollTo($('comments'));
+                },
+                onSuccess:function(response){
+                  Element.scrollTo($('comments'));
+                  var new_comment = new Element('div', {}).update(response.responseText).firstChild;
+                  var comment_id = new_comment.readAttribute('id');
+
+                  $('comments').insert({after:response.responseText});
+                  $('editor_body').value = "";
+
+                  var css_rules = '#' + comment_id + ' pre';
+                  highlightNewAddContent(css_rules);
+                  processComment();
+                  code_favorites_init(css_rules);
+                  
+                  form.spinner.hide();
+                }, parameters:Form.serialize(form)
+              });
+            }
+        }});
+        </script>
+        </div>
+</div>
+
+
+<script type="text/javascript">
+  dp.SyntaxHighlighter.HighlightAll('code', true, true);
+
+  $$('#main .blog_content pre[name=code]').each(function(pre, index){ // blog content
+    var post_id = 1746932;
+    var location = window.location;
+    source_url = location.protocol + "//" + location.host + location.pathname + location.search;
+    pre.writeAttribute('codeable_id', post_id);
+    pre.writeAttribute('codeable_type', "Blog");
+    pre.writeAttribute('source_url', source_url);
+    pre.writeAttribute('pre_index', index);
+    pre.writeAttribute('title', 'maven中配置非标准的java source resource webxml的方法');
+  });
+
+  fix_image_size($$('div.blog_content img'), 700);
+
+  function processComment() {
+    $$('#main .blog_comment > div').each(function(comment){// comment
+      var post_id = comment.id.substr(2);
+      $$("#"+comment.id+" pre[name=code]").each(function(pre, index){
+        var location = window.location;
+        source_url = location.protocol + "//" + location.host + location.pathname + location.search;
+        source_url += "#" + comment.id;
+        pre.writeAttribute('codeable_id', post_id);
+        pre.writeAttribute('codeable_type', "BlogComment");
+        pre.writeAttribute('source_url', source_url);
+        pre.writeAttribute('pre_index', index);
+        pre.writeAttribute('title', 'maven中配置非标准的java source resource webxml的方法');
+      });
+    });
+  }
+
+  function quote_comment(id) {
+    new Ajax.Request('/editor/quote', {
+      parameters: {'id':id, 'type':'BlogComment'},
+      onSuccess:function(response){editor.bbcode_editor.textarea.insertAfterSelection(response.responseText);
+        Element.scrollTo(editor.bbcode_editor.textarea.element);}
+    });
+  }
+
+  code_favorites_init();
+  processComment();
+  new WeiboShare({share_buttons: $('share_weibo'), img_scope: $('blog_content')});
+</script>
+
+
+
+
+        </div>
+
+        <div id="local">
+          <div class="local_top"></div>
+          <div id="blog_owner">
+  <div id="blog_owner_logo"><a href="http://hitdujuan.iteye.com/"><img alt="hitdujuan的博客" class="logo" src="./maven中配置非标准的java source resource webxml的方法 - hitdujuan - ITeye技术网站_files/user-logo.gif" title="hitdujuan的博客: hitdujuan"></a></div>
+  <div id="blog_owner_name">hitdujuan</div>
+</div>
+
+          <div id="blog_actions">
+            <ul>
+              <li>浏览: 3775 次</li>
+              <li>性别: <img alt="Icon_minigender_2" src="./maven中配置非标准的java source resource webxml的方法 - hitdujuan - ITeye技术网站_files/icon_minigender_2.gif" title="女"></li>
+              <li>来自: 杭州</li>
+              <li><img src="./maven中配置非标准的java source resource webxml的方法 - hitdujuan - ITeye技术网站_files/offline.gif"></li>
+              
+                <li>
+                  <a href="http://my.iteye.com/messages/new?message%5Breceiver_name%5D=hitdujuan" class="message" title="发送站内短信">发短消息</a>
+                  
+                    <a href="http://my.iteye.com/feed?subscription%5Bsubscribed_user_name%5D=hitdujuan" class="subscription" onclick="var f = document.createElement(&#39;form&#39;); f.style.display = &#39;none&#39;; this.parentNode.appendChild(f); f.method = &#39;POST&#39;; f.action = this.href;var s = document.createElement(&#39;input&#39;); s.setAttribute(&#39;type&#39;, &#39;hidden&#39;); s.setAttribute(&#39;name&#39;, &#39;authenticity_token&#39;); s.setAttribute(&#39;value&#39;, &#39;+qCQ9tfQ0KvhFhEX/YaxGGWnVxD9dK8v5tyYtjPDqPY=&#39;); f.appendChild(s);f.submit();return false;">关注</a>
+                  
+                </li>
+              
+            </ul>
+          </div>
+          <div id="user_visits" class="clearfix">
+            <h5>最近访客 <span style="font-weight:normal;font-size:12px;padding-left:30px;"><a href="http://hitdujuan.iteye.com/blog/user_visits">更多访客&gt;&gt;</a></span></h5>
+            
+              <div class="user_visit">
+                <div class="logo"><a href="http://lym6520.iteye.com/" target="_blank"><img alt="lym6520的博客" class="logo" src="./maven中配置非标准的java source resource webxml的方法 - hitdujuan - ITeye技术网站_files/7b68a8ef-cea8-3f29-bdbb-d454ee4d1521-thumb.jpg" title="lym6520的博客: 脉兜"></a></div>
+                <div class="left"><a href="http://lym6520.iteye.com/" target="_blank" title="lym6520">lym6520</a></div>
+              </div>
+            
+              <div class="user_visit">
+                <div class="logo"><a href="http://dylinshi126.iteye.com/" target="_blank"><img alt="dylinshi126的博客" class="logo" src="./maven中配置非标准的java source resource webxml的方法 - hitdujuan - ITeye技术网站_files/user-logo-thumb.gif" title="dylinshi126的博客: "></a></div>
+                <div class="left"><a href="http://dylinshi126.iteye.com/" target="_blank" title="dylinshi126">dylinshi126</a></div>
+              </div>
+            
+              <div class="user_visit">
+                <div class="logo"><a href="http://lucky-lijg.iteye.com/" target="_blank"><img alt="lucky_lijg的博客" class="logo" src="./maven中配置非标准的java source resource webxml的方法 - hitdujuan - ITeye技术网站_files/user-logo-thumb.gif" title="lucky_lijg的博客: "></a></div>
+                <div class="left"><a href="http://lucky-lijg.iteye.com/" target="_blank" title="lucky_lijg">lucky_lijg</a></div>
+              </div>
+            
+              <div class="user_visit">
+                <div class="logo"><a href="http://wubo2qml.iteye.com/" target="_blank"><img alt="wubo2qml的博客" class="logo" src="./maven中配置非标准的java source resource webxml的方法 - hitdujuan - ITeye技术网站_files/user-logo-thumb.gif" title="wubo2qml的博客: "></a></div>
+                <div class="left"><a href="http://wubo2qml.iteye.com/" target="_blank" title="wubo2qml">wubo2qml</a></div>
+              </div>
+            
+          </div>
+
+          
+
+                      <div id="blog_menu">
+              <h5>文章分类</h5>
+              <ul>
+                <li><a href="http://hitdujuan.iteye.com/">全部博客 (16)</a></li>
+                
+                  <li><a href="http://hitdujuan.iteye.com/category/259941">学习笔记 (2)</a></li>
+                
+                  <li><a href="http://hitdujuan.iteye.com/category/259978">maven (3)</a></li>
+                
+                  <li><a href="http://hitdujuan.iteye.com/category/260842">知识整理 (3)</a></li>
+                
+                  <li><a href="http://hitdujuan.iteye.com/category/260884">jsp (1)</a></li>
+                
+                  <li><a href="http://hitdujuan.iteye.com/category/261529">svn (0)</a></li>
+                
+                  <li><a href="http://hitdujuan.iteye.com/category/261530">linux (0)</a></li>
+                
+                  <li><a href="http://hitdujuan.iteye.com/category/275155">心灵鸡汤 (2)</a></li>
+                
+                  <li><a href="http://hitdujuan.iteye.com/category/278882">DB (1)</a></li>
+                
+                  <li><a href="http://hitdujuan.iteye.com/category/280499">java (0)</a></li>
+                
+                  <li><a href="http://hitdujuan.iteye.com/category/280565">webx3 (0)</a></li>
+                
+                  <li><a href="http://hitdujuan.iteye.com/category/280570">mysql (0)</a></li>
+                
+                  <li><a href="http://hitdujuan.iteye.com/category/287129">ibatis (0)</a></li>
+                
+                  <li><a href="http://hitdujuan.iteye.com/category/289652">TODOLIST (0)</a></li>
+                
+              </ul>
+            </div>
+            <div id="month_blogs">
+              <h5>社区版块</h5>
+              <ul>
+                <li><a href="http://hitdujuan.iteye.com/blog/news">我的资讯</a> (0)</li>
+                <li>
+                  <a href="http://hitdujuan.iteye.com/blog/post">我的论坛</a> (0)
+                </li>
+                <li><a href="http://hitdujuan.iteye.com/blog/answered_problems">我的问答</a> (0)</li>
+              </ul>
+            </div>
+            <div id="month_blogs">
+              <h5>存档分类</h5>
+              <ul>
+                
+                  <li><a href="http://hitdujuan.iteye.com/blog/monthblog/2014-04">2014-04</a> (1)</li>
+                
+                  <li><a href="http://hitdujuan.iteye.com/blog/monthblog/2013-08">2013-08</a> (1)</li>
+                
+                  <li><a href="http://hitdujuan.iteye.com/blog/monthblog/2013-07">2013-07</a> (1)</li>
+                
+                <li><a href="http://hitdujuan.iteye.com/blog/monthblog_more">更多存档...</a></li>
+              </ul>
+            </div>
+            
+            
+
+            <div id="guest_books">
+              <h5>最新评论</h5>
+              <ul>
+                
+              </ul>
+            </div>
+
+            <div class="local_bottom"></div>
+          
+        </div>
+      </div>
+
+      <div id="footer" class="clearfix">
+        <div id="copyright">
+          <hr>
+          声明：ITeye文章版权属于作者，受法律保护。没有作者书面许可不得转载。若作者同意转载，必须以超链接形式标明文章原始出处和作者。<br>
+          © 2003-2014 ITeye.com.   All rights reserved.  [ 京ICP证110151号  京公网安备110105010620 ]
+        </div>
+      </div>
+    </div>
+    <script type="text/javascript">
+  document.write("<img src='http://stat.iteye.com/?url="+ encodeURIComponent(document.location.href) + "&referrer=" + encodeURIComponent(document.referrer) + "&user_id=165629' width='0' height='0' />");
+</script><img src="./maven中配置非标准的java source resource webxml的方法 - hitdujuan - ITeye技术网站_files/saved_resource" width="0" height="0">
+
+<script src="./maven中配置非标准的java source resource webxml的方法 - hitdujuan - ITeye技术网站_files/tracking.js" type="text/javascript"></script>
+
+    
+    
+  
+
+</body></html>

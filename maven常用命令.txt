@@ -1,0 +1,208 @@
+建一个JAVA项目
+mvn archetype:create -DgroupId=com.m -DartifactId=app 
+
+构建web项目
+mvn archetype:create -DgroupId=com.m -DartifactId=simpleweb -DpackageName=com.m.simpleweb -DarchetypeArtifactId=maven-archetype-webapp
+金融资产-示例：
+mvn archetype:create -DgroupId=com.apex.etm -DartifactId=account_v2_thgqjrzc -DpackageName=com.apex.etm.account_v2.thgqjrzc -DarchetypeArtifactId=maven-archetype-webapp
+
+创建java源码目录：
+cd simpleweb
+mkdir simpleweb\src\main\java
+
+
+maven 插件
+
+    <build>
+        <finalName>projectName</finalName>
+        <!--<directory>D:\servers\tomcat\apache-tomcat-6.0.33\webapps\</directory>-->
+        <!--<outputDirectory>E:\workspace\apex_workspace\web_actuals\target\class</outputDirectory>-->
+        <!--<testOutputDirectory>E:\workspace\apex_workspace\web_actuals\target\test-class</testOutputDirectory>-->
+
+        <resources>
+            <resource>
+                <directory>src/main/resources</directory>
+                <includes>
+                    <include>**/*</include>
+                </includes>
+            </resource>
+            <!--<resource>-->
+            <!--<directory>src/main/resources2</directory>-->
+            <!--<includes>-->
+            <!--<include>**/*</include>-->
+            <!--</includes>-->
+            <!--</resource>-->
+        </resources>
+        <plugins>
+
+            <!--设置 执行package 时跳过 单元测试环节-->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>2.4.2</version>
+                <!--执行package 时跳过 单元测试环节,命令方式：mvn install -Dmaven.test.skip=true-->
+                <configuration>
+                    <skipTests>true</skipTests>
+                </configuration>
+            </plugin>
+
+	<!--war 增加jar的打包支持，用于子项目引用classes-->
+      <plugin>
+        <artifactId>maven-jar-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>interface</id>
+            <phase>package</phase>
+            <goals>
+              <goal>jar</goal>
+            </goals>
+            <configuration>
+              <!-- 添加classifier修饰以区别于war，保证上传成功 -->
+              <classifier>classes</classifier>
+              <includes>
+                <include>**/com/apex/etm/bid/jjs/</include>
+              </includes>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+	<!--war 打包插件-->
+	<plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-war-plugin</artifactId>
+        <version>2.1.1</version>
+        <configuration>
+            <!--竞价室 模块打包，指定包含的资源文件（如jsp、js、css等）-->
+            <packagingIncludes>
+                res/js/views/jjs_detail.js,
+                res/prj/default/css/jjs/,
+                WEB-INF/prj/views_bjhl2/jjs/
+            </packagingIncludes>
+        </configuration>
+      </plugin>
+
+            <!--jetty插件-->
+            <plugin>
+                <groupId>org.mortbay.jetty</groupId>
+                <artifactId>maven-jetty-plugin</artifactId>
+                <version>6.1.26</version>
+                <configuration>
+                    <contextPath>/projectName</contextPath>
+                    <connectors>
+                        <connector implementation="org.mortbay.jetty.nio.SelectChannelConnector">
+                            <port>8090</port>
+                        </connector>
+                    </connectors>
+                    <scanIntervalSeconds>10</scanIntervalSeconds>
+                </configuration>
+            </plugin>
+
+
+            <!--【自动生成跨平台的启动脚本】
+		运行maven命令 :mvn package appassembler:assemble
+            -->
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>appassembler-maven-plugin</artifactId>
+                <version>1.2</version>
+                <executions>
+                    <execution>
+                        <id>make-assembly</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>assemble</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <!--
+                    配置说明
+                    configurationDirectory：生成配置文件路径
+                    configurationSourceDirectory：配置文件原路径，默认为src/main/config
+                    assembleDirectory:整体包目录
+                    extraJvmArguments：jvm参数
+                    binFileExtensions：生成脚本的后缀
+                    platforms：生成哪几种平台
+                    repositoryName：依赖包目录，默认repo
+                    programs：这个必须参数，启动的主class
+                -->
+                <configuration>
+                    <configurationDirectory>conf</configurationDirectory>
+                    <configurationSourceDirectory>src/main/resources</configurationSourceDirectory>
+                    <copyConfigurationDirectory>true</copyConfigurationDirectory>
+                    <includeConfigurationDirectoryInClasspath>true</includeConfigurationDirectoryInClasspath>
+                    <assembleDirectory>${project.build.directory}/client</assembleDirectory>
+                    <extraJvmArguments>-Xms1024m -Xmx1024m -XX:PermSize=256m -XX:MaxPermSize=512m -XX:NewSize=192m -XX:MaxNewSize=384m</extraJvmArguments>
+                    <binFileExtensions>
+                        <unix>.sh</unix>
+                    </binFileExtensions>
+                    <platforms>
+                        <platform>windows</platform>
+                        <platform>unix</platform>
+                    </platforms>
+                    <repositoryName>lib</repositoryName>
+                    <programs>
+                        <program>
+                            <!--todo 启动的主class-->
+                            <mainClass>com.nfs.iot.sas.scheduling.TriggerRunner</mainClass>
+                            <name>start</name>
+                        </program>
+                    </programs>
+                </configuration>
+            </plugin>
+
+
+	  <!--doc 文档生成 http://blog.csdn.net/jianxin1009/article/details/35269501
+http://maven.apache.org/plugins/maven-javadoc-plugin/faq.html
+http://maven.apache.org/plugins/maven-javadoc-plugin/jar-mojo.html
+
+cmd 执行：
+set CLASSPATH=D:\jdk\jdk1.6.0_11\lib;
+mvn javadoc:javadoc
+-->
+	   <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-javadoc-plugin</artifactId>
+                <version>2.9.1</version>
+            </plugin>
+
+ 	<!--deploysource-->
+         <plugin>
+             <artifactId>maven-source-plugin</artifactId>
+             <version>2.2.1</version>
+             <configuration>
+                 <attach>true</attach>
+             </configuration>
+             <executions>
+                 <execution>
+                     <phase>compile</phase>
+                     <goals>
+                         <goal>jar</goal>
+                     </goals>
+                 </execution>
+             </executions>
+         </plugin>
+       
+
+        </plugins>
+    </build>
+
+
+
+
+
+
+maven常用命令为
+mvn compile		编译源代码
+mvn test-compile	编译测试代码
+mvn test		运行应用程序中的单元测试 
+mvn site		生成项目相关信息的网站 
+mvn clean		清除目标目录中的生成结果 
+mvn package		生成target目录，编译、测试代码，生成测试报告，生成jar/war文件
+mvn install		在本地Repository中装jar 
+mvn eclipse:eclipse	生成Eclipse项目文件 
+mvn jetty:run		运行项目于jetty上
+
+
+
+安装jar宝到本地目录：
+mvn install:install-file -DgroupId=com.oracle -DartifactId=ojdbc14 -Dversion=10.2.0.1.0 -Dpackaging=jar -Dfile=E:\workspace\ides_workspace\zjxh_mall\ROOT\web\WEB-INF\lib\ojdbc14.jar

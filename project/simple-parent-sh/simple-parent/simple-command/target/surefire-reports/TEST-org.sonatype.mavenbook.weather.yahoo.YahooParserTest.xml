@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<testsuite failures="0" time="1.497" errors="0" skipped="0" tests="1" name="org.sonatype.mavenbook.weather.yahoo.YahooParserTest">
+  <properties>
+    <property name="java.runtime.name" value="Java(TM) SE Runtime Environment"/>
+    <property name="sun.boot.library.path" value="D:\java\jdk1.6.0_11\jre\bin"/>
+    <property name="java.vm.version" value="0.2-b02-internal, 19.0-b04-internal"/>
+    <property name="java.vm.vendor" value="Sun Microsystems Inc."/>
+    <property name="java.vendor.url" value="http://java.sun.com/"/>
+    <property name="path.separator" value=";"/>
+    <property name="java.vm.name" value="Dynamic Code Evolution Client VM"/>
+    <property name="file.encoding.pkg" value="sun.io"/>
+    <property name="user.country" value="CN"/>
+    <property name="sun.java.launcher" value="SUN_STANDARD"/>
+    <property name="sun.os.patch.level" value=""/>
+    <property name="java.vm.specification.name" value="Java Virtual Machine Specification"/>
+    <property name="user.dir" value="E:\[maven]\project\simple-parent-sh\simple-parent\simple-command"/>
+    <property name="java.runtime.version" value="1.6.0_11-b03"/>
+    <property name="java.awt.graphicsenv" value="sun.awt.Win32GraphicsEnvironment"/>
+    <property name="basedir" value="E:\[maven]\project\simple-parent-sh\simple-parent\simple-command"/>
+    <property name="java.endorsed.dirs" value="D:\java\jdk1.6.0_11\jre\lib\endorsed"/>
+    <property name="os.arch" value="x86"/>
+    <property name="surefire.real.class.path" value="E:\[maven]\project\simple-parent-sh\simple-parent\simple-command\target\surefire\surefirebooter6500561292128051430.jar"/>
+    <property name="java.io.tmpdir" value="C:\Users\ADMINI~1\AppData\Local\Temp\"/>
+    <property name="line.separator" value="
+"/>
+    <property name="java.vm.specification.vendor" value="Sun Microsystems Inc."/>
+    <property name="user.variant" value=""/>
+    <property name="os.name" value="Windows Vista"/>
+    <property name="sun.jnu.encoding" value="GBK"/>
+    <property name="java.library.path" value="D:\java\jdk1.6.0_11\jre\bin;.;C:\Windows\Sun\Java\bin;C:\Windows\system32;C:\Windows;C:\Program Files\PC Connectivity Solution\;D:\oraclexe\app\oracle\product\10.2.0\server\bin;C:\Windows\system32;C:\Windows;C:\Windows\System32\Wbem;C:\Windows\System32\WindowsPowerShell\v1.0\;C:\Program Files\Intel\WiFi\bin\;C:\Program Files\Common Files\Intel\WirelessCommon\;C:\Program Files\ThinkPad\Bluetooth Software\;;D:\Program Files\TortoiseSVN\bin;C:\Program Files\Common Files\Thunder Network\KanKan\Codecs;D:\java\jdk1.6.0_11\bin;D:\Apache Software Foundation\apache-ant-1.8.1\bin;D:\Apache Software Foundation\apache-maven-3.0.3\bin;"/>
+    <property name="surefire.test.class.path" value="E:\[maven]\project\simple-parent-sh\simple-parent\simple-command\target\test-classes;E:\[maven]\project\simple-parent-sh\simple-parent\simple-command\target\classes;C:\Users\Administrator\.m2\repository\org\sonatype\mavenbook\multispring\simple-weather\0.8-SNAPSHOT\simple-weather-0.8-SNAPSHOT.jar;C:\Users\Administrator\.m2\repository\org\sonatype\mavenbook\multispring\simple-model\0.8-SNAPSHOT\simple-model-0.8-SNAPSHOT.jar;C:\Users\Administrator\.m2\repository\log4j\log4j\1.2.14\log4j-1.2.14.jar;C:\Users\Administrator\.m2\repository\dom4j\dom4j\1.6.1\dom4j-1.6.1.jar;C:\Users\Administrator\.m2\repository\xml-apis\xml-apis\1.0.b2\xml-apis-1.0.b2.jar;C:\Users\Administrator\.m2\repository\jaxen\jaxen\1.1.1\jaxen-1.1.1.jar;C:\Users\Administrator\.m2\repository\jdom\jdom\1.0\jdom-1.0.jar;C:\Users\Administrator\.m2\repository\xerces\xercesImpl\2.6.2\xercesImpl-2.6.2.jar;C:\Users\Administrator\.m2\repository\xom\xom\1.0\xom-1.0.jar;C:\Users\Administrator\.m2\repository\xerces\xmlParserAPIs\2.6.2\xmlParserAPIs-2.6.2.jar;C:\Users\Administrator\.m2\repository\xalan\xalan\2.6.0\xalan-2.6.0.jar;C:\Users\Administrator\.m2\repository\com\ibm\icu\icu4j\2.6.1\icu4j-2.6.1.jar;C:\Users\Administrator\.m2\repository\org\sonatype\mavenbook\multispring\simple-persist\0.8-SNAPSHOT\simple-persist-0.8-SNAPSHOT.jar;C:\Users\Administrator\.m2\repository\org\hibernate\hibernate\3.2.5.ga\hibernate-3.2.5.ga.jar;C:\Users\Administrator\.m2\repository\net\sf\ehcache\ehcache\1.2.3\ehcache-1.2.3.jar;C:\Users\Administrator\.m2\repository\asm\asm-attrs\1.5.3\asm-attrs-1.5.3.jar;C:\Users\Administrator\.m2\repository\antlr\antlr\2.7.6\antlr-2.7.6.jar;C:\Users\Administrator\.m2\repository\cglib\cglib\2.1_3\cglib-2.1_3.jar;C:\Users\Administrator\.m2\repository\asm\asm\1.5.3\asm-1.5.3.jar;C:\Users\Administrator\.m2\repository\org\hibernate\hibernate-annotations\3.3.0.ga\hibernate-annotations-3.3.0.ga.jar;C:\Users\Administrator\.m2\repository\javax\persistence\persistence-api\1.0\persistence-api-1.0.jar;C:\Users\Administrator\.m2\repository\org\hibernate\hibernate-commons-annotations\3.3.0.ga\hibernate-commons-annotations-3.3.0.ga.jar;C:\Users\Administrator\.m2\repository\org\apache\geronimo\specs\geronimo-jta_1.1_spec\1.1\geronimo-jta_1.1_spec-1.1.jar;C:\Users\Administrator\.m2\repository\org\springframework\spring\2.0.7\spring-2.0.7.jar;C:\Users\Administrator\.m2\repository\commons-logging\commons-logging\1.1\commons-logging-1.1.jar;C:\Users\Administrator\.m2\repository\logkit\logkit\1.0.1\logkit-1.0.1.jar;C:\Users\Administrator\.m2\repository\avalon-framework\avalon-framework\4.1.3\avalon-framework-4.1.3.jar;C:\Users\Administrator\.m2\repository\javax\servlet\servlet-api\2.3\servlet-api-2.3.jar;C:\Users\Administrator\.m2\repository\org\apache\velocity\velocity\1.5\velocity-1.5.jar;C:\Users\Administrator\.m2\repository\commons-collections\commons-collections\3.1\commons-collections-3.1.jar;C:\Users\Administrator\.m2\repository\commons-lang\commons-lang\2.1\commons-lang-2.1.jar;C:\Users\Administrator\.m2\repository\oro\oro\2.0.8\oro-2.0.8.jar;C:\Users\Administrator\.m2\repository\hsqldb\hsqldb\1.8.0.7\hsqldb-1.8.0.7.jar;C:\Users\Administrator\.m2\repository\junit\junit\3.8.1\junit-3.8.1.jar;"/>
+    <property name="java.specification.name" value="Java Platform API Specification"/>
+    <property name="java.class.version" value="50.0"/>
+    <property name="sun.management.compiler" value="HotSpot Client Compiler"/>
+    <property name="os.version" value="6.1"/>
+    <property name="user.home" value="C:\Users\Administrator"/>
+    <property name="user.timezone" value=""/>
+    <property name="java.awt.printerjob" value="sun.awt.windows.WPrinterJob"/>
+    <property name="java.specification.version" value="1.6"/>
+    <property name="file.encoding" value="GBK"/>
+    <property name="user.name" value="Administrator"/>
+    <property name="java.class.path" value="E:\[maven]\project\simple-parent-sh\simple-parent\simple-command\target\test-classes;E:\[maven]\project\simple-parent-sh\simple-parent\simple-command\target\classes;C:\Users\Administrator\.m2\repository\org\sonatype\mavenbook\multispring\simple-weather\0.8-SNAPSHOT\simple-weather-0.8-SNAPSHOT.jar;C:\Users\Administrator\.m2\repository\org\sonatype\mavenbook\multispring\simple-model\0.8-SNAPSHOT\simple-model-0.8-SNAPSHOT.jar;C:\Users\Administrator\.m2\repository\log4j\log4j\1.2.14\log4j-1.2.14.jar;C:\Users\Administrator\.m2\repository\dom4j\dom4j\1.6.1\dom4j-1.6.1.jar;C:\Users\Administrator\.m2\repository\xml-apis\xml-apis\1.0.b2\xml-apis-1.0.b2.jar;C:\Users\Administrator\.m2\repository\jaxen\jaxen\1.1.1\jaxen-1.1.1.jar;C:\Users\Administrator\.m2\repository\jdom\jdom\1.0\jdom-1.0.jar;C:\Users\Administrator\.m2\repository\xerces\xercesImpl\2.6.2\xercesImpl-2.6.2.jar;C:\Users\Administrator\.m2\repository\xom\xom\1.0\xom-1.0.jar;C:\Users\Administrator\.m2\repository\xerces\xmlParserAPIs\2.6.2\xmlParserAPIs-2.6.2.jar;C:\Users\Administrator\.m2\repository\xalan\xalan\2.6.0\xalan-2.6.0.jar;C:\Users\Administrator\.m2\repository\com\ibm\icu\icu4j\2.6.1\icu4j-2.6.1.jar;C:\Users\Administrator\.m2\repository\org\sonatype\mavenbook\multispring\simple-persist\0.8-SNAPSHOT\simple-persist-0.8-SNAPSHOT.jar;C:\Users\Administrator\.m2\repository\org\hibernate\hibernate\3.2.5.ga\hibernate-3.2.5.ga.jar;C:\Users\Administrator\.m2\repository\net\sf\ehcache\ehcache\1.2.3\ehcache-1.2.3.jar;C:\Users\Administrator\.m2\repository\asm\asm-attrs\1.5.3\asm-attrs-1.5.3.jar;C:\Users\Administrator\.m2\repository\antlr\antlr\2.7.6\antlr-2.7.6.jar;C:\Users\Administrator\.m2\repository\cglib\cglib\2.1_3\cglib-2.1_3.jar;C:\Users\Administrator\.m2\repository\asm\asm\1.5.3\asm-1.5.3.jar;C:\Users\Administrator\.m2\repository\org\hibernate\hibernate-annotations\3.3.0.ga\hibernate-annotations-3.3.0.ga.jar;C:\Users\Administrator\.m2\repository\javax\persistence\persistence-api\1.0\persistence-api-1.0.jar;C:\Users\Administrator\.m2\repository\org\hibernate\hibernate-commons-annotations\3.3.0.ga\hibernate-commons-annotations-3.3.0.ga.jar;C:\Users\Administrator\.m2\repository\org\apache\geronimo\specs\geronimo-jta_1.1_spec\1.1\geronimo-jta_1.1_spec-1.1.jar;C:\Users\Administrator\.m2\repository\org\springframework\spring\2.0.7\spring-2.0.7.jar;C:\Users\Administrator\.m2\repository\commons-logging\commons-logging\1.1\commons-logging-1.1.jar;C:\Users\Administrator\.m2\repository\logkit\logkit\1.0.1\logkit-1.0.1.jar;C:\Users\Administrator\.m2\repository\avalon-framework\avalon-framework\4.1.3\avalon-framework-4.1.3.jar;C:\Users\Administrator\.m2\repository\javax\servlet\servlet-api\2.3\servlet-api-2.3.jar;C:\Users\Administrator\.m2\repository\org\apache\velocity\velocity\1.5\velocity-1.5.jar;C:\Users\Administrator\.m2\repository\commons-collections\commons-collections\3.1\commons-collections-3.1.jar;C:\Users\Administrator\.m2\repository\commons-lang\commons-lang\2.1\commons-lang-2.1.jar;C:\Users\Administrator\.m2\repository\oro\oro\2.0.8\oro-2.0.8.jar;C:\Users\Administrator\.m2\repository\hsqldb\hsqldb\1.8.0.7\hsqldb-1.8.0.7.jar;C:\Users\Administrator\.m2\repository\junit\junit\3.8.1\junit-3.8.1.jar;"/>
+    <property name="java.vm.specification.version" value="1.0"/>
+    <property name="sun.arch.data.model" value="32"/>
+    <property name="java.home" value="D:\java\jdk1.6.0_11\jre"/>
+    <property name="java.specification.vendor" value="Sun Microsystems Inc."/>
+    <property name="user.language" value="zh"/>
+    <property name="awt.toolkit" value="sun.awt.windows.WToolkit"/>
+    <property name="java.vm.info" value="mixed mode"/>
+    <property name="java.version" value="1.6.0_11"/>
+    <property name="java.ext.dirs" value="D:\java\jdk1.6.0_11\jre\lib\ext;C:\Windows\Sun\Java\lib\ext"/>
+    <property name="sun.boot.class.path" value="D:\java\jdk1.6.0_11\jre\lib\resources.jar;D:\java\jdk1.6.0_11\jre\lib\rt.jar;D:\java\jdk1.6.0_11\jre\lib\sunrsasign.jar;D:\java\jdk1.6.0_11\jre\lib\jsse.jar;D:\java\jdk1.6.0_11\jre\lib\jce.jar;D:\java\jdk1.6.0_11\jre\lib\charsets.jar;D:\java\jdk1.6.0_11\jre\lib\modules\jdk.boot.jar;D:\java\jdk1.6.0_11\jre\classes"/>
+    <property name="java.vendor" value="Sun Microsystems Inc."/>
+    <property name="localRepository" value="C:\Users\Administrator\.m2\repository"/>
+    <property name="file.separator" value="\"/>
+    <property name="java.vendor.url.bug" value="http://java.sun.com/cgi-bin/bugreport.cgi"/>
+    <property name="sun.cpu.endian" value="little"/>
+    <property name="sun.io.unicode.encoding" value="UnicodeLittle"/>
+    <property name="sun.desktop" value="windows"/>
+    <property name="sun.cpu.isalist" value="pentium_pro+mmx pentium_pro pentium+mmx pentium i486 i386 i86"/>
+  </properties>
+  <testcase time="1.467" classname="org.sonatype.mavenbook.weather.yahoo.YahooParserTest" name="testParser"/>
+</testsuite>

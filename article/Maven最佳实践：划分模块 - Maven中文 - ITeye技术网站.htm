@@ -1,0 +1,633 @@
+首页 <http://www.iteye.com/> 资讯 <http://www.iteye.com/news> 精华
+<http://www.iteye.com/magazines> 论坛 <http://www.iteye.com/forums> 问答
+<http://www.iteye.com/ask> 博客 <http://www.iteye.com/blogs> 专栏
+<http://www.iteye.com/blogs/subjects> 群组 <http://www.iteye.com/groups>
+_更多_ ▼ <#>
+招聘 <http://job.iteye.com/iteye> 搜索 <http://www.iteye.com/search>
+您还未登录 ! </login> 登录 </login> 注册 </signup>
+
+
+  Maven中文 </>
+
+  * *博客* <http://juvenshun.iteye.com>
+  * 微博 </weibo>
+  * 相册 </album>
+  * 收藏 </link>
+  * 留言 </blog/guest_book>
+  * 关于我 </blog/profile>
+
+juvenshun <http://juvenshun.iteye.com>
+
+
+      Maven最佳实践：划分模块 </blog/305865> //
+
+  * *博客分类：* Maven </category/34725>
+
+maven <http://www.iteye.com/blogs/tag/maven>DAO
+<http://www.iteye.com/blogs/tag/DAO>Web <http://www.iteye.com/blogs/tag
+/Web>项目管理
+<http://www.iteye.com/blogs/tag/%E9%A1%B9%E7%9B%AE%E7%AE%A1%E7%90%86>配
+置管理
+<http://www.iteye.com/blogs/tag/%E9%85%8D%E7%BD%AE%E7%AE%A1%E7%90%86> 
+
+“分天下为三十六郡，郡置守，尉，监” —— 《史记·秦始皇本纪》
+
+ 
+
+所有用Maven管理的真实的项目都应该是分模块的，每个模块都对应着一个
+pom.xml。它们之间通过继承和聚合（也称作多模块，multi-module）相互关联。
+那么，为什么要这么做呢？我们明明在开发一个项目，划分模块后，导入Eclipse
+变成了N个项目，这会带来复杂度，给开发带来不便。
+
+ 
+
+为了解释原因，假设有这样一个项目，很常见的Java Web应用。在这个应用中，我
+们分了几层：
+
+  * Dao层负责数据库交互，封装了Hibernate交互的类。
+  * Service层处理业务逻辑，放一些Service接口和实现相关的Bean。
+  * Web层负责与客户端交互，主要有一些Structs的Action类。
+
+对应的，在一个项目中，我们会看到一些包名：
+
+  * org.myorg.app.dao
+  * org.myorg.app.service
+  * org.myorg.app.web
+  * org.myorg.app.util
+
+这样整个项目的框架就清晰了，但随着项目的进行，你可能会遇到如下问题：
+
+ 1. 这个应用可能需要有一个前台和一个后台管理端（web或者swing），你发现大
+    部分dao，一些service，和大部分util是在两个应用中可。这样的问题，你一
+    周内遇到了好几次。
+ 2. pom.xml中的依赖列表越来越长以重用的，但是，由于目前只有一个项目
+    （WAR），你不得不新建一个项目依赖这个WAR，这变得非常的恶心，因为在
+    Maven中配置对WAR的依赖远不如依赖JAR那样简单明了，而且你根本不需要
+    org.myorg.app.web。有人修改了dao，提交到svn并且不小心导致build失败
+    了，你在编写service的代码，发现编译不过，只能等那人把dao修复了，你才
+    能继续进行，很多人都在修改，到后来你根本就不清楚哪个依赖是谁需要的，
+    渐渐的，很多不必要的依赖被引入。甚至出现了一个依赖有多个版本存在。
+ 3. build整个项目的时间越来越长，尽管你只是一直在web层工作，但你不得不
+    build整个项目。
+ 4. 某个模块，比如util，你只想让一些经验丰富的人来维护，可是，现在这种情
+    况，每个开发者都能修改，这导致关键模块的代码质量不能达到你的要求。
+
+我们会发现，其实这里实际上没有遵守一个设计模式原则：“高内聚，低耦合”。虽
+然我们通过包名划分了层次，并且你还会说，这些包的依赖都是单向的，没有包的
+环依赖。这很好，但还不够，因为就构建层次来说，所有东西都被耦合在一起了。
+因此我们需要使用Maven划分模块。
+
+ 
+
+一个简单的Maven模块结构是这样的：
+
+ 
+
+---- app-parent
+
+             |-- pom.xml (pom)
+
+             |
+
+             |-- app-util
+
+             |        |-- pom.xml (jar)
+
+             |
+
+             |-- app-dao
+
+             |        |-- pom.xml (jar)
+
+             |
+
+             |-- app-service
+
+             |        |-- pom.xml (jar)
+
+             |
+
+             |-- app-web
+
+                      |-- pom.xml (war)   
+
+ 
+
+上述简单示意图中，有一个父项目(app-parent)聚合很多子项目（app-util,
+app-dao, app-service, app-web）。每个项目，不管是父子，都含有一个pom.xml
+文件。而且要注意的是，小括号中标出了每个项目的打包类型。父项目是pom,也只
+能是pom。子项目有jar，或者war。根据它包含的内容具体考虑。
+
+ 
+
+这些模块的依赖关系如下：
+
+ 
+
+app-dao      --> app-util
+
+app-service --> app-dao
+
+app-web     --> app-service
+
+ 
+
+注意依赖的传递性（大部分情况是传递的，除非你配置了特殊的依赖
+scope），app-dao依赖于app-util，app-service依赖于app-dao，于是app-
+service也依赖于app-util。同理，app-web依赖于app-dao,app-util。
+
+ 
+
+用项目层次的划分替代包层次的划分能给我们带来如下好处：
+
+ 1. 方便重用，如果你有一个新的swing项目需要用到app-dao和app-service，添
+    加对它们的依赖即可，你不再需要去依赖一个WAR。而有些模块，如app-
+    util，完全可以渐渐进化成公司的一份基础工具类库，供所有项目使用。这是
+    模块化最重要的一个目的。
+ 2. 由于你现在划分了模块，每个模块的配置都在各自的pom.xml里，不用再到一
+    个混乱的纷繁复杂的总的POM中寻找自己的配置。
+ 3. 如果你只是在app-dao上工作，你不再需要build整个项目，只要在app-dao目
+    录运行mvn命令进行build即可，这样可以节省时间，尤其是当项目越来越复
+    杂，build越来越耗时后。
+ 4. 某些模块，如app-util被所有人依赖，但你不想给所有人修改，现在你完全可
+    以从这个项目结构出来，做成另外一个项目，svn只给特定的人访问，但仍提
+    供jar给别人使用。
+ 5. 多模块的Maven项目结构支持一些Maven的更有趣的特性（如
+    DepencencyManagement），这留作以后讨论。
+
+接下来讨论一下POM配置细节，实际上非常简单，先看app-parent的pom.xml：
+
+Xml代码  收藏代码 <javascript:void()>
+
+ 1. <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"  
+ 2.     xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">  
+ 3.     <modelVersion>4.0.0</modelVersion>  
+ 4.     <groupId>org.myorg.myapp</groupId>  
+ 5.     <artifactId>app-parent</artifactId>  
+ 6.     <packaging>pom</packaging>  
+ 7.     <version>1.0-SNAPSHOT</version>  
+ 8.     <modules>  
+ 9.         <module>app-util</module>  
+10.         <module>app-dao</module>  
+11.         <module>app-service</module>  
+12.         <module>app-web</module>  
+13.     </modules>  
+14. </project>  
+
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>org.myorg.myapp</groupId>
+	<artifactId>app-parent</artifactId>
+	<packaging>pom</packaging>
+	<version>1.0-SNAPSHOT</version>
+	<modules>
+		<module>app-util</module>
+		<module>app-dao</module>
+		<module>app-service</module>
+		<module>app-web</module>
+	</modules>
+</project>
+
+Maven的坐标GAV（groupId, artifactId, version）在这里进行配置，这些都是必
+须的。特殊的地方在于，这里的packaging为pom。所有带有子模块的项目的
+packaging都为pom。packaging如果不进行配置，它的默认值是jar，代表Maven会
+将项目打成一个jar包。
+
+该配置重要的地方在于modules，例子中包含的子模块有app-util, app-dao,
+app-service, app-war。在Maven build app-parent的时候，它会根据子模块的相
+互依赖关系整理一个build顺序，然后依次build。
+
+这就是一个父模块大概需要的配置，接下来看一下子模块符合配置继承父模块。、
+
+Xml代码  收藏代码 <javascript:void()>
+
+ 1. <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"  
+ 2.     xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">  
+ 3.     <parent>  
+ 4.         <artifactId>app-parent</artifactId>  
+ 5.         <groupId>org.myorg.myapp</groupId>  
+ 6.         <version>1.0-SNAPSHOT</version>  
+ 7.     </parent>  
+ 8.     <modelVersion>4.0.0</modelVersion>  
+ 9.     <artifactId>app-util</artifactId>  
+10.     <dependencies>  
+11.         <dependency>  
+12.             <groupId>commons-lang</groupId>  
+13.             <artifactId>commons-lang</artifactId>  
+14.             <version>2.4</version>  
+15.         </dependency>  
+16.     </dependencies>  
+17. </project>  
+
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	<parent>
+		<artifactId>app-parent</artifactId>
+		<groupId>org.myorg.myapp</groupId>
+		<version>1.0-SNAPSHOT</version>
+	</parent>
+	<modelVersion>4.0.0</modelVersion>
+	<artifactId>app-util</artifactId>
+	<dependencies>
+		<dependency>
+			<groupId>commons-lang</groupId>
+			<artifactId>commons-lang</artifactId>
+			<version>2.4</version>
+		</dependency>
+	</dependencies>
+</project>
+
+app-util模块继承了app-parent父模块，因此这个POM的一开始就声明了对app-
+parent的引用，该引用是通过Maven坐标GAV实现的。而关于项目app-util本身，它
+却没有声明完整GAV，这里我们只看到了artifactId。这个POM并没有错，groupId
+和version默认从父模块继承了。实际上子模块从父模块继承一切东西，包括依
+赖，插件配置等等。
+
+此外app-util配置了一个对于commons-lang的简单依赖，这是最简单的依赖配置形
+式。大部分情况，也是通过GAV引用的。
+
+再看一下app-dao，它也是继承于app-parent，同时依赖于app-util：
+
+Xml代码  收藏代码 <javascript:void()>
+
+ 1. <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"  
+ 2.     xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">  
+ 3.     <parent>  
+ 4.         <artifactId>app-parent</artifactId>  
+ 5.         <groupId>org.myorg.myapp</groupId>  
+ 6.         <version>1.0-SNAPSHOT</version>  
+ 7.     </parent>  
+ 8.     <modelVersion>4.0.0</modelVersion>  
+ 9.     <artifactId>app-dao</artifactId>  
+10.     <dependencies>  
+11.         <dependency>  
+12.             <groupId>org.myorg.myapp</groupId>  
+13.             <artifactId>app-util</artifactId>  
+14.             <version>${project.version}</version>  
+15.         </dependency>  
+16.     </dependencies>  
+17. </project>  
+
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	<parent>
+		<artifactId>app-parent</artifactId>
+		<groupId>org.myorg.myapp</groupId>
+		<version>1.0-SNAPSHOT</version>
+	</parent>
+	<modelVersion>4.0.0</modelVersion>
+	<artifactId>app-dao</artifactId>
+	<dependencies>
+		<dependency>
+			<groupId>org.myorg.myapp</groupId>
+			<artifactId>app-util</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+	</dependencies>
+</project>
+
+该配置和app-util的配置几乎没什么差别，不同的地方在于，依赖变化了，app-
+dao依赖于app-util。这里要注意的是version的值为${project.version}，这个值
+是一个属性引用，指向了POM的project/version的值，也就是这个POM对应的
+version。由于app-dao的version继承于app-parent，因此它的值就是1.0-
+SNAPSHOT。而app-util也继承了这个值，因此在所有这些项目中，我们做到了保持
+版本一致。
+
+这里还需要注意的是，app-dao依赖于app-util，而app-util又依赖于commons-
+lang，根据传递性，app-dao也拥有了对于commons-lang的依赖。
+
+app-service我们跳过不谈，它依赖于app-dao。我们最后看一下app-web：
+
+Xml代码  收藏代码 <javascript:void()>
+
+ 1. <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"  
+ 2.     xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">  
+ 3.     <parent>  
+ 4.         <artifactId>app-parent</artifactId>  
+ 5.         <groupId>org.myorg.myapp</groupId>  
+ 6.         <version>1.0-SNAPSHOT</version>  
+ 7.     </parent>  
+ 8.     <modelVersion>4.0.0</modelVersion>  
+ 9.     <artifactId>app-web</artifactId>  
+10.     <packaging>war</packaging>  
+11.     <dependencies>  
+12.         <dependency>  
+13.             <groupId>org.myorg.myapp</groupId>  
+14.             <artifactId>app-service</artifactId>  
+15.             <version>${project.version}</version>  
+16.         </dependency>  
+17.     </dependencies>  
+18. </project>  
+
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	<parent>
+		<artifactId>app-parent</artifactId>
+		<groupId>org.myorg.myapp</groupId>
+		<version>1.0-SNAPSHOT</version>
+	</parent>
+	<modelVersion>4.0.0</modelVersion>
+	<artifactId>app-web</artifactId>
+	<packaging>war</packaging>
+	<dependencies>
+		<dependency>
+			<groupId>org.myorg.myapp</groupId>
+			<artifactId>app-service</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+	</dependencies>
+</project>
+
+app-web依赖于app-service，因此配置了对其的依赖。
+
+由于app-web是我们最终要部署的应用，因此它的packaging是war。为此，你需要
+有一个目录src/main/webapp。并在这个目录下拥有web应用需要的文件，如/WEB-
+INF/web.xml。没有web.xml，Maven会报告build失败，此外你可能还会有这样一些
+子目录：/js, /img, /css ... 。
+
+ 
+
+看看Maven是如何build整个项目的，我们在 app-parent 根目录中运行 mvn clean
+install ，输出的末尾会有大致这样的内容：
+
+ 
+
+...
+
+...
+
+[INFO] [war:war]
+[INFO] Packaging webapp
+[INFO] Assembling webapp[app-web] in
+[/home/juven/workspaces/ws-others/myapp/app-web/target/app-web-1.0-SNAPSHOT]
+[INFO] Processing war project
+[INFO] Webapp assembled in[50 msecs]
+[INFO] Building war:
+/home/juven/workspaces/ws-others/myapp/app-web/target/app-web-1.0-SNAPSHOT.war
+[INFO] [install:install]
+[INFO] Installing
+/home/juven/workspaces/ws-others/myapp/app-web/target/app-web-1.0-SNAPSHOT.war
+to
+/home/juven/.m2/repository/org/myorg/myapp/app-web/1.0-SNAPSHOT/app-web-1.0-SNAPSHOT.war
+[INFO]
+[INFO]
+[INFO]
+------------------------------------------------------------------------
+[INFO] Reactor Summary:
+[INFO]
+------------------------------------------------------------------------
+[INFO] app-parent ............................................ SUCCESS
+[1.191s]
+[INFO] app-util .............................................. SUCCESS
+[1.274s]
+[INFO] app-dao ............................................... SUCCESS
+[0.583s]
+[INFO] app-service ........................................... SUCCESS
+[0.593s]
+[INFO] app-web ............................................... SUCCESS
+[0.976s]
+[INFO]
+------------------------------------------------------------------------
+[INFO]
+------------------------------------------------------------------------
+[INFO] BUILD SUCCESSFUL
+[INFO]
+------------------------------------------------------------------------
+[INFO] Total time: 4 seconds
+[INFO] Finished at: Sat Dec 27 08:20:18 PST 2008
+[INFO] Final Memory: 3M/17M
+[INFO]
+------------------------------------------------------------------------
+
+ 
+
+注意Reactor Summary，整个项目根据我们希望的顺序进行build。Maven根据我们
+的依赖配置，智能的安排了顺序，app-util, app-dao, app-service, app-web。
+
+ 
+
+最后，你可以在 app-web/target 目录下找到文件 app-web-1.0-SNAPSHOT.war ，
+打开这个war包，在 /WEB-INF/lib 目录看到了 commons-lang-2.4.jar，以及对应
+的app-util, app-dao, app-service 的jar包。Maven自动帮你处理了打包的事
+情，并且根据你的依赖配置帮你引入了相应的jar文件。
+
+ 
+
+使用多模块的Maven配置，可以帮助项目划分模块，鼓励重用，防止POM变得过于庞
+大，方便某个模块的构建，而不用每次都构建整个项目，并且使得针对某个模块的
+特殊控制更为方便。本文同时给出了一个实际的配置样例，展示了如何使用Maven
+配置多模块项目。
+
+*71*
+顶
+*5*
+踩
+分享到： <javascript:;> <javascript:;>
+“第十三章 属性和资源过滤”发布 </blog/310644> | Maven权威指南 </blog/295196>
+
+  * 2008-12-28 00:32
+  * 浏览 47308
+  * 评论(27) <#comments>
+  * 分类:企业架构 <http://www.iteye.com/blogs/category/architecture>
+  * 相关推荐 <http://www.iteye.com/wiki/blog/305865>
+
+
+          评论
+
+27 楼 zhumingpeng <http://zhumingpeng.iteye.com> 2014-11-16  
+如果有web 模块，，，怎么用 eclipse server tomcat去调试 maven项目呢  大神
+赐教啊。。
+26 楼 gelipolove <http://gelipolove.iteye.com> 2014-10-11  
+Java代码  收藏代码 <javascript:void()>
+
+ 1. <parent>    
+ 2.         <artifactId>app-parent</artifactId>    
+ 3.         <groupId>org.myorg.myapp</groupId>    
+ 4.         <version>1.0-SNAPSHOT</version>    
+ 5. </parent>    
+
+<parent>  
+        <artifactId>app-parent</artifactId>  
+        <groupId>org.myorg.myapp</groupId>  
+        <version>1.0-SNAPSHOT</version>  
+</parent>  
+
+
+这里的<version>可以使用变量吗？？类似${project.version}的。
+如果可以使用，请问怎么用？谢谢。
+25 楼 hushaby_chao <http://hushaby-chao.iteye.com> 2014-10-07  
+以前都是纵向分割，尽量把mvc做小；从你的文章发现原来还可以把mvc横向分割，
+有扩展了思路，THX。
+24 楼 xiaguobing <http://xiaguobing.iteye.com> 2014-09-02  
+受益颇多啊，谢谢嘞！ 
+23 楼 sunshine_love <http://sunshine-love.iteye.com> 2014-08-21  
+     虽然接触maven时间不长，不过看你的blog是受益匪浅
+22 楼 yq81862 <http://yq81862.iteye.com> 2014-08-12  
+rxcss66 写道
+yq81862 写道
+上传到svn总是比较崩溃，楼主是怎么解决这个问题的？
+如果先上传子项目，父项目就无法上传，如果先上传父项目，子项目就不用上传
+了，但是下载的时候不会出现子项目？
+
+我也是同样的问题，按照您的方法构建了主项目与子模块之后怎么发布到svn供项
+目团队使用？
+
+需要安装一个maven svn插件  在import---import----maven---check out maven
+projects from scm ----m2e marketplace
+ps:其中svn不能使用最新的插件，只能使用1.8.x的那个  我装的是subclipse
+21 楼 rxcss66 <http://rxcss66.iteye.com> 2014-05-08  
+yq81862 写道
+上传到svn总是比较崩溃，楼主是怎么解决这个问题的？
+如果先上传子项目，父项目就无法上传，如果先上传父项目，子项目就不用上传
+了，但是下载的时候不会出现子项目？
+
+我也是同样的问题，按照您的方法构建了主项目与子模块之后怎么发布到svn供项
+目团队使用？
+20 楼 yq81862 <http://yq81862.iteye.com> 2014-04-06  
+上传到svn总是比较崩溃，楼主是怎么解决这个问题的？
+如果先上传子项目，父项目就无法上传，如果先上传父项目，子项目就不用上传
+了，但是下载的时候不会出现子项目？
+19 楼 Elvin.Chu <http://elvin-chu.iteye.com> 2014-03-06  
+学习了,真的很不错哦
+18 楼 bo_hai <http://bo-hai.iteye.com> 2013-12-09  
+eclipse 自动中的 maven war 项目经常building 整个工程，有什么办法能不
+building整个工程呢？
+17 楼 zhuzhiguosnail <http://zhu-zhiguo.iteye.com> 2013-08-21  
+子项目的artifactId和子项目的名字有什么关系吗？？
+16 楼 zhuzhiguosnail <http://zhu-zhiguo.iteye.com> 2013-08-21  
+我按照这个做为什么总是报模块找不到呢？
+
+Child module
+D:\workstudio\development\Workspace\jee\MmyServices\duno.mmy.shared of
+D:\workstudio\development\Workspace\jee\MmyServices\pom.xml does not exist
+15 楼 sbpcx <http://sbpcx.iteye.com> 2013-07-30  
+马克，定是要拜读 。
+14 楼 FQ_kevin <http://fq-kevin.iteye.com> 2013-07-14  
+juvenshun 你好 有个问题
+之前我都是建立单独的项目如：api(jar)、api-impl(jar)、web(war)通过依赖在
+本地开发时web可以直接部署到tomcat上运行进行测试，现在通过这种父子模块后
+（父打包war后放到tomcat 下是可以的）在本地开发时我怎么也可以直接部署测试？
+13 楼 cd_huangbo <http://cd-huangbo.iteye.com> 2013-05-06  
+juvenshun 你好，我有个问题：app-parent 可不可以与其他的子模块在同一个目
+录？ module配置变成这样：
+Java代码  收藏代码 <javascript:void()>
+
+ 1. <modules>    
+ 2.        <module>../app-util</module>    
+ 3.        <module>../app-dao</module>    
+ 4.        <module>../app-service</module>    
+ 5.        <module>../app-web</module>    
+ 6.    </modules>  
+
+ <modules>  
+        <module>../app-util</module>  
+        <module>../app-dao</module>  
+        <module>../app-service</module>  
+        <module>../app-web</module>  
+    </modules>
+
+
+我试过了这样的话maven首先去仓库下载这个app-parent工程，但实际上仓库里没
+有，maven将报找不到这样的一个工程错误，能帮忙解释下吗？
+12 楼 paladin1988 <http://paladin1988.iteye.com> 2013-04-10  
+哈哈，maven权威指南的作者呀。。。没看名字。。书挺不错的。。
+11 楼 paladin1988 <http://paladin1988.iteye.com> 2013-04-10  
+哈哈，好贴。。。
+会用mavne的多，但是maven的精髓在于SCM，LZ好贴。。
+
+尤其对于大公司的产品线，合理划分项目，子项目，子系统，模块非常重要。。
+
+多写了。。
+10 楼 raykcn <http://raykcn.iteye.com> 2013-01-17  
+指隙阳光12138 写道
+   我还想问一下，如果这样划分模块之后，我只编译其中某一个模块的话，其他
+模块也会自动编译吗？（主要是这个模块应该也从根pom那里继承了modules属
+性...所以不太明白）
+
+你可以在iteye搜索一下博主的“按需构建多模块，玩转Maven反应堆”
+9 楼 指隙阳光12138 <http://tinkerz.iteye.com> 2013-01-14  
+   我还想问一下，如果这样划分模块之后，我只编译其中某一个模块的话，其他
+模块也会自动编译吗？（主要是这个模块应该也从根pom那里继承了modules属
+性...所以不太明白）
+8 楼 liuyiyou <http://liuyiyou.iteye.com> 2012-08-24  
+liu_swei 写道
+其实，平时工作中就是这么用的，但一直没分析为什么要这样
+不这样会有什么问题
+应该向楼主学习。
+maven不过是一个工具而已用熟了很简单
+一个《maven权威指南》几乎能解决遇到的所有问题
+
+maven权威指南中文版就是楼主翻译的
+« 上一页 1 2 </blog/305865?page=2#comments> 下一页 »
+</blog/305865?page=2#comments>
+
+
+          发表评论
+
+</login>您还没有登录,请您登录后再发表评论 </login>
+
+juvenshun的博客 <http://juvenshun.iteye.com>
+juvenshun
+
+  * 浏览: 772441 次
+  * 性别: Icon_minigender_1
+  * 来自: 苏州
+  *
+
+
+          最近访客 更多访客>> </blog/user_visits>
+
+chenyx1220的博客 <http://chenyx1220.iteye.com>
+chenyx1220 <http://chenyx1220.iteye.com>
+hdown的博客 <http://hdown.iteye.com>
+hdown <http://hdown.iteye.com>
+buyaopa的博客 <http://buyaopa.iteye.com>
+buyaopa <http://buyaopa.iteye.com>
+fczfr的博客 <http://fczfr.iteye.com>
+fczfr <http://fczfr.iteye.com>
+
+
+          文章分类
+
+  * 全部博客 (56) </>
+  * Maven (61) </category/34725>
+
+
+          社区版块
+
+  * 我的资讯 </blog/news> (5)
+  * 我的论坛 </blog/post> (15)
+  * 我的问答 </blog/answered_problems> (2)
+
+
+          存档分类
+
+  * 2010-11 </blog/monthblog/2010-11> (1)
+  * 2010-04 </blog/monthblog/2010-04> (1)
+  * 2010-03 </blog/monthblog/2010-03> (1)
+  * 更多存档... </blog/monthblog_more>
+
+
+          最新评论
+
+  * 七围烟雨 <http://1214876944.iteye.com>：
+    org.sonatype.nexus.proxy.maven. ...
+    我的书《Maven实战》 </blog/809712#bc2365899>
+  * lenki013 <http://lenki013.iteye.com>： 拜读了！
+    Maven生命周期详解 </blog/213959#bc2365133>
+  * Wuaner <http://wuaner.iteye.com>： 使用 nexus 时，除了在
+    ~/.m2/settings.x ...
+    Nexus入门指南（图文） </blog/349534#bc2363765>
+  * zhumingpeng <http://zhumingpeng.iteye.com>： 如果有web 模块，，，怎
+    么用 eclipse server ...
+    Maven最佳实践：划分模块 </blog/305865#bc2362907>
+  * yihaijunyxr <http://yihaijunyxr.iteye.com>： 如果有子项目,则
+    <profiles>-<pr ...
+    我的书《Maven实战》 </blog/809712#bc2362561>
+
+------------------------------------------------------------------------
+声明：ITeye文章版权属于作者，受法律保护。没有作者书面许可不得转载。若作
+者同意转载，必须以超链接形式标明文章原始出处和作者。
+© 2003-2015 ITeye.com. All rights reserved. [ 京ICP证110151号 京公网安备
+110105010620 ]
